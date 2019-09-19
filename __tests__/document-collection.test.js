@@ -7,7 +7,7 @@ jest.mock('../lib/files.js', () => ({
 // for setting up mock expectations
 const { readFile, writeFile, readdir } = require('../lib/files');
 const DocumentCollection = require('../lib/document-collection');
-const documentNew = new DocumentCollection;
+const documentNew = new DocumentCollection('document');
 
 describe('Document Collection', () => {
 
@@ -20,7 +20,7 @@ describe('Document Collection', () => {
     // act
     return documentNew.save(exampleObject)
       .then(() => {
-        const dest = `./${exampleObject.id}.json`;
+        const dest = `./document/${exampleObject.id}.json`;
         const writeCalls = writeFile.mock.calls;
         expect(writeCalls.length).toBe(1);
         expect(writeCalls[0][0]).toBe(dest);
@@ -41,7 +41,21 @@ describe('Document Collection', () => {
   });
   it('gets a file by id', () => {
     // arrange
-    const source = `./${exampleObject.id}.json`;
+    const source = `./document/${exampleObject.id}.json`;
+    readFile.mockResolvedValue(exampleObject);
+    
+    // act
+    return documentNew.get(exampleObject.id)
+      .then(() => {
+        // const dest = `./${exampleObject.id}.json`;
+        const readCalls = readFile.mock.calls;
+        expect(readCalls.length).toBe(1); 
+        expect(readCalls[0][0]).toBe(source);
+      });
+  });
+  it('gets all files from within a directory', () => {
+    // arrange
+    const source = `./document/${exampleObject.id}.json`;
     readFile.mockResolvedValue(exampleObject);
     
     // act
