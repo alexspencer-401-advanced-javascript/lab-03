@@ -10,9 +10,11 @@ const DocumentCollection = require('../lib/document-collection');
 const documentNew = new DocumentCollection;
 
 describe('Document Collection', () => {
+
+  const exampleObject = { name: 'Alex' };
+
   it('saves a file', () => {
     // arrange
-    const exampleObject = { name: 'Alex' };
     writeFile.mockResolvedValue(exampleObject);
     
     // act
@@ -35,6 +37,20 @@ describe('Document Collection', () => {
     documentNew.save({})
       .catch(err => {
         expect(err).toBe(error);
+      });
+  });
+  it('gets a file by id', () => {
+    // arrange
+    const source = `./${exampleObject.id}.json`;
+    readFile.mockResolvedValue(exampleObject);
+    
+    // act
+    return documentNew.get(exampleObject.id)
+      .then(() => {
+        // const dest = `./${exampleObject.id}.json`;
+        const readCalls = readFile.mock.calls;
+        expect(readCalls.length).toBe(1); 
+        expect(readCalls[0][0]).toBe(source);
       });
   });
 });
