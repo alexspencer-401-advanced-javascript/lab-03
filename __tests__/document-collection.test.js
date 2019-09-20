@@ -47,7 +47,6 @@ describe('Document Collection', () => {
     // act
     return documentNew.get(exampleObject.id)
       .then(() => {
-        // const dest = `./${exampleObject.id}.json`;
         const readCalls = readFile.mock.calls;
         expect(readCalls.length).toBe(1); 
         expect(readCalls[0][0]).toBe(source);
@@ -68,7 +67,6 @@ describe('Document Collection', () => {
     // act
     return documentCollect.getAll()
       .then(array => {
-        // const dest = `./${exampleObject.id}.json`;
         expect(readdir.mock.calls[0][0]).toBe('document');
         expect(readFile.mock.calls[1][0]).toBe('./document/123.json');
         expect(array[0].id).toBe(exampleObject2.id);
